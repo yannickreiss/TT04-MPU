@@ -1,21 +1,24 @@
 `timescale 1ns/1ps;
 
-module tt_um_yannickreiss_semaphore (input clk,
-                  input ena,
-                  input rst_n,
-                  input [7:0] bus_in,
-                  output [7:0] bus_out);
-    // Signals
-    wire mutex;
-    reg [7:0] bus_reg;
+module tt_um_yannickreiss_semaphore (input wire [7:0] ui_in,    // Dedicated inputs
+                                     output wire [7:0] uo_out,  // Dedicated outputs
+                                     input wire [7:0] uio_in,   // IOs: Input path
+                                     output wire [7:0] uio_out, // IOs: Output path
+                                     output wire [7:0] uio_oe,  // IOs: Enable path (active high: 0 = input, 1 = output
+                                     input wire ena,
+                                     input wire clk,
+                                     input wire rst_n);
+// Signals
+wire mutex;
+reg [7:0] bus_reg;
 
-    assign mutex = bus_out[0] || bus_out[1] || bus_out[2] || bus_out[3] || bus_out[4] || bus_out[5] || bus_out[6] || bus_out[7];
-    
-    assign bus_out = bus_reg & mutex;
+assign mutex = uo_out[0] || uo_out[1] || uo_out[2] || uo_out[3] || uo_out[4] || uo_out[5] || uo_out[6] || uo_out[7];
 
-    // reset
-    always @(negedge rst_n) begin
-        bus_reg = 8'b0;
-    end
+assign uo_out = bus_reg & mutex;
+
+// reset
+always @(negedge rst_n) begin
+    bus_reg = 8'b0;
+end
 
 endmodule
