@@ -1,6 +1,6 @@
 `timescale 1ns/1ps;
 
-module semaphore (input clk,
+module tt_um_yannickreiss_semaphore (input clk,
                   input rst,
                   input [7:0] bus_in,
                   output [7:0] bus_out);
