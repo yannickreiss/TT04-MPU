@@ -1,7 +1,8 @@
 `timescale 1ns/1ps;
 
 module tt_um_yannickreiss_semaphore (input clk,
-                  input rst,
+                  input ena,
+                  input rst_n,
                   input [7:0] bus_in,
                   output [7:0] bus_out);
     // Signals
@@ -13,7 +14,7 @@ module tt_um_yannickreiss_semaphore (input clk,
     assign bus_out = bus_reg & mutex;
 
     // reset
-    always @(negedge rst) begin
+    always @(negedge rst_n) begin
         bus_reg = 8'b0;
     end
 
