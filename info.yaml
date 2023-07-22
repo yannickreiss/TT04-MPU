@@ -6,9 +6,9 @@ project:
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
   source_files:        
-    - semaphore.v
+    - mpu.v
 #    - decoder.v
-  top_module:  "tt_um_yannickreiss_semaphore"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
+  top_module:  "tt_um_yannickreiss_mpu"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 4x2 or 8x2
@@ -22,53 +22,54 @@ yaml_version: 4
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
   author:       "Yannick Reiß"      # Your name
-  title:        "Binary Semaphore with FCFS principle"      # Project title
+  title:        "8-Bit MPU"      # Project title
   language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  "Ressource control using a binary semaphore."      # Short description of what your project does
+  description:  "8-Bit MPU with no internal memory."      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Explain how your project works
+      The MPU can be connected to ROM and RAM and is using the bidirectional pins as system bus.
+      Provide ROM with instructions encoded like described in the documentation.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Connect 8 input devices and 8 output devices. Provide a series of signals and the semaphore will unlock the ports in order.
+      Connect to ROM and RAM, connect clock and press reset.
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
-  inputs:               
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
+  inputs:       
+    - HALT        
+    - IRQ
+    - bus_enable
+    - 
+    - 
+    - 
+    - 
+    - 
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - dot
+    - clk
+    - rom enable
+    - ram enable
+    - 
+    - address extension
+    - address extension
+    - address extension
+    - address extension
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
+    - databus
+    - databus
+    - databus
+    - databus
+    - databus
+    - databus
+    - databus
+    - databus
 
 # The following fields are optional
   tag:          ""      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
-  external_hw:  ""      # Describe any external hardware needed
-  discord:      ""      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
+  external_hw:  "ROM and RAM according to documentation"      # Describe any external hardware needed
+  discord:      "schnick_"      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
-  clock_hz:     0       # Clock frequency in Hz (if required)
+  clock_hz:     1000       # Clock frequency in Hz (if required)
   picture:      ""      # relative path to a picture in your repository
