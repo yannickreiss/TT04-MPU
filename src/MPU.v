@@ -16,10 +16,13 @@ reg [2:0] phase_counter; // current phase
 reg [2:0] alt_phase; // store phase here, while HALT
 reg [7:0] alu_in1; // first alu input
 reg [7:0] alu_in2; // second alu input
+reg [7:0] alu_result;
 reg [7:0] instruction; // store current instruction
 reg HALT_s;
+reg jump;
 
 // in- and output signals
+wire [11:0]branch_result;
 wire HALT;
 assign HALT = ui_in[7];
 
@@ -39,6 +42,7 @@ always @(negedge rst_n) begin
     alt_phase = 3'b0;
     phase_counter = 3'b0;
     HALT_s = 1'b0;
+    jump = 1'b0;
 end
 
 // Phase counter
@@ -68,9 +72,47 @@ always @(negedge HALT) begin
 end
 
 // program counter
-
+always @(posedge clk) begin
+    if (jump == 1'b0) begin
+        if (phase_counter == 3'b110) begin
+            program_counter = program_counter + 1;
+        end
+    else
+       program_counter = branch_result;
+    end
+end
 
 // ALU
+always @(instruction, alu_in1, alu_in2) begin
+    if (instruction[4] == 1'b1) begin
+        if (instruction[7:5] == 3'b101) begin
+            // Unary operations
+            case (instruction[3:1])
+                3'b000: alu_result = !alu_in1;
+                3'b001: alu_result = alu_in1 + 1;
+                3'b010: alu_result = alu_in1 - 1;
+                3'b011: alu_result = alu_in1 >>> 1;
+                3'b100: alu_result = alu_in1 <<< 1;
+                3'b101: alu_result = alu_in1 >> 1;
+                3'b110: alu_result = alu_in1 << 1;
+                default: alu_result = 8'b0;
+            endcase
+        end
+        else begin
+            // Binary operations
+            case (instruction[3:1])
+                3'b001: alu_result = alu_in1 | alu_in2;
+                3'b010: alu_result = alu_in1 ^ alu_in2;
+                3'b011: alu_result = alu_in1 + alu_in2;
+                3'b100: alu_result = alu_in1 - alu_in2;
+                3'b101: alu_result = (alu_in1 == alu_in2);
+                3'b110: alu_result = alu_in1 <<< alu_in2;
+                3'b111: alu_result = alu_in1 >>> alu_in2;
+                default: alu_result = alu_in1 & alu_in2; 
+            endcase
+        end
+    end
+end
 
-
+// One Froggy a day keeps the sadness away!
 endmodule
